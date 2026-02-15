@@ -1,0 +1,46 @@
+// Example: Complex real-world application config
+
+app {
+  name my-api
+  version "2.1.0"
+  env production
+
+  server {
+    port 443
+    workers 8
+    graceful_shutdown "30s"
+  }
+
+  auth {
+    provider oidc
+    issuer "https://auth.example.com"
+    client_id api-client
+    scopes [ openid profile email ]
+  }
+
+  storage {
+    default s3
+    s3 {
+      bucket api-data
+      prefix "prod/"
+      multipart_threshold "100M"
+    }
+  }
+
+  observability {
+    tracing {
+      sampler { ratio 0.1 }
+      exporter otlp
+    }
+    metrics {
+      port 9090
+      path "/metrics"
+    }
+  }
+
+  limits {
+    request_size "1M"
+    timeout "60s"
+    concurrency 1000
+  }
+}

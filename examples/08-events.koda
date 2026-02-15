@@ -1,0 +1,8 @@
+// Example: Event / scenario
+
+events [
+  { type start ts 1700000000 id e1 }
+  { type data payload hello }
+  { type metric name latency value 42.5 }
+  { type end ts 1700000001 }
+]

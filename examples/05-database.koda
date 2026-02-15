@@ -1,0 +1,18 @@
+// Example: Database configuration
+
+database {
+  primary {
+    host "db.example.com"
+    port 5432
+    name app_db
+    user app
+    pool 20
+    ssl true
+  }
+  replica {
+    host "replica.example.com"
+    port 5432
+    name app_db
+    read_only true
+  }
+}

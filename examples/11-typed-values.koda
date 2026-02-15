@@ -1,0 +1,20 @@
+// Example: Typed values (durations, sizes, etc.)
+
+scheduling {
+  interval "5m"
+  timeout "30s"
+  retry_delay "1s"
+  max_duration "1h"
+}
+
+resources {
+  memory "512M"
+  cpu "1000m"
+  disk "10G"
+}
+
+window {
+  start "09:00"
+  end "17:00"
+  tz "Europe/London"
+}

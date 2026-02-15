@@ -1,0 +1,7 @@
+// Example: List of objects
+
+vehicles [
+  { id A speed 60 type car }
+  { id B speed 40 type truck }
+  { id C speed 80 type car }
+]

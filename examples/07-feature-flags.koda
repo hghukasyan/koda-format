@@ -1,0 +1,15 @@
+// Example: Feature flags
+
+features {
+  dark_mode true
+  beta_ui false
+  max_upload "50M"
+  experiments [
+    new_checkout
+    search_v2
+  ]
+  rollout {
+    us 100
+    eu 50
+  }
+}

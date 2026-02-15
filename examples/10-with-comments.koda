@@ -1,0 +1,21 @@
+// Example: With comments
+
+/* Global defaults
+   applied unless overridden */
+
+defaults {
+  retries 3
+  backoff "1s"
+}
+
+// Per-environment overrides
+overrides {
+  dev {
+    retries 1
+    /* no backoff in dev for faster iteration */
+  }
+  staging {
+    retries 5
+    backoff "2s"
+  }
+}

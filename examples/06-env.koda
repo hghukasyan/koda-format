@@ -1,0 +1,17 @@
+// Example: Environment settings (dev/prod)
+
+env {
+  dev {
+    debug true
+    log_level verbose
+    api_url "http://localhost:3000"
+    cache { ttl 60 }
+  }
+  prod {
+    debug false
+    log_level warn
+    api_url "https://api.example.com"
+    cache { ttl 3600 }
+    rate_limit 1000
+  }
+}

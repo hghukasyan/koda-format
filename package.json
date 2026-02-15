@@ -1,0 +1,48 @@
+{
+  "name": "koda-format",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Compact Object Data Architecture — text and binary format with canonical encoding",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "build:addon": "node-gyp configure build",
+    "build:all": "npm run build && npm run build:addon",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
+    "bench": "node benchmark/bench.mjs",
+    "benchmark": "node benchmark/bench.mjs"
+  },
+  "keywords": [
+    "koda",
+    "data-format",
+    "serialization",
+    "binary",
+    "json-alternative",
+    "canonical"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "node-addon-api": "^8.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "dist",
+    "binding.gyp",
+    "native",
+    "README.md",
+    "SPEC.md"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.11.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.3.3"
+  }
+}

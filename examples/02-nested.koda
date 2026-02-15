@@ -1,0 +1,11 @@
+// Example: Nested configuration
+
+app {
+  name my-service
+  env production
+  storage {
+    driver s3
+    bucket data
+    region us-east-1
+  }
+}

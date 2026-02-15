@@ -1,0 +1,15 @@
+// Example: Server configuration
+
+server {
+  host "0.0.0.0"
+  port 8080
+  workers 4
+  tls {
+    cert "/etc/certs/server.pem"
+    key "/etc/certs/server.key"
+  }
+  limits {
+    body "10M"
+    timeout "30s"
+  }
+}
