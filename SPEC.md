@@ -3,7 +3,9 @@
 **Full name:** Compact Object Data Architecture  
 **Specification name:** KDF (KODA Data Format)  
 **Version:** 1.0  
-**Status:** Draft
+**Status:** Draft  
+
+**npm package:** [koda-format](https://www.npmjs.com/package/koda-format)
 
 ---
 
