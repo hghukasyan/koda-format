@@ -287,4 +287,22 @@ For `{ "a": 1 "b": 2 }` (keys canonical order `a`, `b`):
 
 ---
 
+## Appendix A: Binary format v2 (proposed, compact storage)
+
+A future binary format **v2** is designed to minimize size and improve decode performance. It is **not** the current format (v1, §6). Full design: **[BINARY-V2.md](./BINARY-V2.md)**.
+
+**Summary of v2 layout:**
+
+| Section | Encoding |
+|--------|----------|
+| **Header** | 2 B magic (`0x4B 0x44` "KD") + 1 B version (`0x02`) |
+| **Dictionary** | varint N + for each key: varint length + UTF-8 bytes (canonical order) |
+| **Data** | Single root value. All counts/lengths: **unsigned varint**. Integers: **signed varint (zigzag)** for compact range, or 8 B big-endian escape. |
+
+**Type tags (1 byte):** 0x00 null, 0x01 false, 0x02 true, 0x03 int (varint), 0x04 int64 (8 B), 0x05 float (8 B), 0x06 string (varint len + UTF-8), 0x08 array (varint count + values), 0x09 object (varint pairs + (varint key index + value)×pairs). No redundant structural markers; no padding.
+
+**Goals:** Smaller than v1 and than JSON for typical documents; sequential decode; low overhead for small objects; suitable for PostgreSQL BYTEA and large-scale processing.
+
+---
+
 *End of specification.*
