@@ -105,6 +105,15 @@ Decoding can be distributed across multiple worker threads. A decoder pool (`cre
 | `decodeSync(buffer, options?)` | Synchronous decode. Blocks the event loop. |
 | `createDecoderPool(options?)` | Create a pool of decoder workers. Returns `{ decode, destroy }`. Options: `poolSize`. |
 
+**Streaming (length-prefixed frames)**
+
+| Method | Description |
+|--------|-------------|
+| `createEncodeStream(options?)` | Transform stream: writes KODA values, outputs framed binary. Options: `maxDepth`, `highWaterMark`. |
+| `createDecodeStream(options?)` | Transform stream: reads binary chunks, emits one KODA value per frame. Options: `maxFrameSize`, `maxDepth`, `maxDictionarySize`, `maxStringLength`, `highWaterMark`. |
+
+Each stream record is `[varint length][KODA binary payload]`. Frames can be split across chunks; the decode stream reassembles them and supports backpressure.
+
 **Decode options:** `maxDepth`, `maxDictionarySize`, `maxStringLength`.
 
 **Utilities**
@@ -118,6 +127,38 @@ Decoding can be distributed across multiple worker threads. A decoder pool (`cre
 **Errors:** `KodaParseError`, `KodaEncodeError`, `KodaDecodeError` (with `.position` or `.byteOffset` where applicable).
 
 Full specification (grammar, binary layout, canonicalization): [SPEC.md](https://github.com/hghukasyan/koda-format/blob/main/SPEC.md).
+
+## Streaming
+
+For large or continuous data, use **record-based streaming** with length-prefixed frames. Each record is sent as:
+
+```
+[varint length][KODA binary payload]
+```
+
+The **varint** is unsigned LEB128 (7 bits per byte, high bit = more bytes). The payload is the same as `encode(value)`. Multiple records are sent sequentially; the decoder reassembles frames even when the varint or payload is split across chunks, and respects backpressure.
+
+**Encode stream** — accepts KODA values, writes framed binary. Options: `maxDepth`, `highWaterMark`.
+
+**Decode stream** — accepts binary chunks, emits one value per frame. Options: `maxFrameSize` (e.g. `1024 * 1024` for 1 MB limit), `maxDepth`, `maxDictionarySize`, `maxStringLength`, `highWaterMark`.
+
+```ts
+import { createEncodeStream, createDecodeStream } from 'koda-format';
+import { PassThrough } from 'node:stream';
+
+const encoder = createEncodeStream();
+const decoder = createDecodeStream({ maxFrameSize: 1024 * 1024 });
+encoder.pipe(new PassThrough()).pipe(decoder);
+
+decoder.on('data', (value) => console.log(value));
+decoder.on('error', (err) => console.error(err));
+
+encoder.write({ id: 1, name: 'first' });
+encoder.write({ id: 2, name: 'second' });
+encoder.end();
+```
+
+**Behavior:** Both streams are Node.js `Transform`s. The decode stream buffers until a full frame is available, then emits one value; if the consumer is slow, the pipeline backs up. Errors (malformed varint, frame too large, truncated frame, trailing bytes, invalid payload) emit `KodaDecodeError` and destroy the stream. Low memory use and incremental processing; when the C++ addon is built, encode/decode use it per frame.
 
 ## Building the native addon
 

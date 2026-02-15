@@ -39,6 +39,7 @@
     "node": ">=18"
   },
   "files": [
+    "examples",
     "README.md",
     "SPEC.md",
     "dist",

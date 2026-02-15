@@ -31,6 +31,8 @@ export type { EncodeOptions } from './encoder.js';
 export type { DecodeOptions } from './decoder.js';
 export { decodeAsync, createDecoderPool } from './decode-async.js';
 export type { DecoderPool, DecoderPoolOptions } from './decode-async.js';
+export { createEncodeStream, createDecodeStream } from './streams.js';
+export type { EncodeStreamOptions, DecodeStreamOptions } from './streams.js';
 
 const _addonPath = join(dirname(dirname(fileURLToPath(import.meta.url))), 'build', 'Release', 'koda_format.node');
 
